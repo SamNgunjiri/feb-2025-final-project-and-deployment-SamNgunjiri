@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout - MyStore</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 1rem;
+    }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .breadcrumbs {
+      margin: 1rem auto 0;
+      max-width: 800px;
+      padding: 0 1rem;
+      font-size: 0.95rem;
+    }
+
+    .breadcrumbs a {
+      text-decoration: none;
+      color: #2980b9;
+    }
+
+    .breadcrumbs a:hover {
+      text-decoration: underline;
+    }
+    .summary {
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+    .pay-btn {
+      margin-top: 1.5rem;
+      background: #27ae60;
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      width: 100%;
+      cursor: pointer;
+    }
+    .success {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 1.1rem;
+      color: #27ae60;
+    }
+  </style>
+</head>
+<body>
+    <div class="breadcrumbs">
+    <a href="index.html">Home</a> &gt; <a href="cart.html">Cart</a>  &gt; <strong>Checkout</strong>
+  </div>
+  <div class="container">
+    <h1>Checkout</h1>
+    <label for="phone">Phone Number (M-Pesa)</label>
+    <input type="text" id="phone" placeholder="e.g. 07XXXXXXXX" />
+
+    <div class="summary" id="summary"></div>
+    <button class="pay-btn" onclick="payNow()">Pay Now</button>
+    <div class="success" id="successMsg"></div>
+  </div>
+
+
+  <script>
+    const summary = document.getElementById('summary');
+    const successMsg = document.getElementById('successMsg');
+
+    function loadSummary() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      if (cart.length === 0) {
+        summary.textContent = 'Cart is empty.';
+        document.querySelector('.pay-btn').disabled = true;
+        return;
+      }
+      let total = 0;
+      summary.innerHTML = '<h3>Order Summary:</h3>';
+      cart.forEach(item => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+        summary.innerHTML += `${item.name} x ${item.quantity} = KES ${subtotal}<br>`;
+      });
+      summary.innerHTML += `<strong>Total: KES ${total}</strong>`;
+    }
+
+    function payNow() {
+      const phone = document.getElementById('phone').value;
+      if (!/^07\d{8}$/.test(phone)) {
+        alert('Please enter a valid Safaricom number.');
+        return;
+      }
+      // Simulate payment success
+      successMsg.textContent = 'Payment successful via M-Pesa! Thank you.';
+      localStorage.removeItem('cart');
+    }
+
+    loadSummary();
+  </script>
+</body>
+</html>
